@@ -101,6 +101,8 @@ inline const char* to_short_str(spdlog::level::level_enum l)
 {
     return short_level_names[l];
 }
+using level_hasher = std::hash<int>;
+
 } //level
 
 
