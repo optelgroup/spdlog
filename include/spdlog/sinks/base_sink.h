@@ -37,15 +37,15 @@ public:
         _sink_it(msg);
     }
 
-    int copyTo(const std::tr2::sys::path& /*destination*/, bool /*silent*/) override
+    int copyTo(const path_t& /*destination*/, bool /*silent*/) override
     {
         //do nothing
         return 0;
     }
 
-    std::string getDestination() const override
+    filename_t getDestination() const override
     {
-        return std::string();
+        return filename_t();
     }
 
 protected:

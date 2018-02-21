@@ -13,6 +13,8 @@
 #include <exception>
 #include<functional>
 
+#include "tweakme.h"
+
 #if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
 #include <codecvt>
 #include <locale>
@@ -136,8 +138,12 @@ private:
 //
 #if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
 using filename_t = std::wstring;
+using path_t = std::tr2::sys::wpath;
+using ostringstream_t = std::wostringstream;
 #else
 using filename_t = std::string;
+using path_t = std::tr2::sys::path;
+using ostringstream_t = std::ostringstream;
 #endif
 
 

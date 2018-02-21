@@ -86,39 +86,39 @@ public:
         _file_helper.flush();
     }
 
-    std::string formatSourceForSHFileOperation(const std::tr2::sys::path& path)
+    filename_t formatSourceForSHFileOperation(const path_t& path)
     {
-        std::ostringstream sstream;
+        ostringstream_t sstream;
         sstream 
             << path
-            << '*'
-            << '\0';
+            << _T('*')
+            << _T('\0');
 
-        std::string result(sstream.str());
+        filename_t result(sstream.str());
         std::replace(result.begin(), result.end(), '/', '\\');
 
         return result;
     }
 
-    std::string formatDestinationForSHFileOperation(const std::tr2::sys::path& path)
+    filename_t formatDestinationForSHFileOperation(const path_t& path)
     {
-        std::ostringstream sstream;
-        sstream << path << '\0';
+        ostringstream_t sstream;
+        sstream << path << _T('\0');
 
-        std::string result(sstream.str());
+        filename_t result(sstream.str());
         std::replace(result.begin(), result.end(), '/', '\\');
 
         return result;
     }
 
-    int copyTo(const std::tr2::sys::path& destination, bool silent) override
+    int copyTo(const path_t& destination, bool silent) override
     {
         copy_in_progress_ = true;
 
         auto formatted_source = formatSourceForSHFileOperation(_base_filename);
         auto formatted_destination = formatDestinationForSHFileOperation(destination);
 
-        SHFILEOPSTRUCTA file_operation;
+        SHFILEOPSTRUCT file_operation;
         ZeroMemory(&file_operation, sizeof(SHFILEOPSTRUCT));
 
         file_operation.hwnd = nullptr;
@@ -134,13 +134,13 @@ public:
             file_operation.fFlags = FOF_FILESONLY | FOF_NOCONFIRMMKDIR;
         }
 
-        auto result = SHFileOperationA(&file_operation);
+        auto result = SHFileOperation(&file_operation);
         copy_in_progress_ = false;
 
         return result;
     }
 
-    std::string getDestination() const override
+    filename_t getDestination() const override
     {
         return calc_filename(_base_filename, 0, _extension);
     }
