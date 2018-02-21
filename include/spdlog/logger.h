@@ -43,7 +43,6 @@ public:
     template <typename... Args> void warn(const char* category, const char* fmt, const Args&... args);
     template <typename... Args> void error(const char* category, const char* fmt, const Args&... args);
     template <typename... Args> void critical(const char* category, const char* fmt, const Args&... args);
-    template <typename... Args> void fatal(const char* category, const char* fmt, const Args&... args);
 
     template <typename T> void log(level::level_enum lvl, const char* category, const T&);
     template <typename T> void trace(const char* category, const T&);
@@ -52,7 +51,6 @@ public:
     template <typename T> void warn(const char* category, const T&);
     template <typename T> void error(const char* category, const T&);
     template <typename T> void critical(const char* category, const T&);
-    template <typename T> void fatal(const char* category, const T&);
 
     virtual bool should_log(level::level_enum) const;
     void set_level(level::level_enum);

@@ -158,12 +158,6 @@ inline void spdlog::logger::critical(const char* category, const char* fmt, cons
     log(level::critical, category, fmt, args...);
 }
 
-template <typename... Args>
-inline void spdlog::logger::fatal(const char* category, const char* fmt, const Args&... args)
-{
-    log(level::fatal, category, fmt, args...);
-}
-
 
 template<typename T>
 inline void spdlog::logger::trace(const char* category, const T& msg)
@@ -201,12 +195,6 @@ template<typename T>
 inline void spdlog::logger::critical(const char* category, const T& msg)
 {
     log(level::critical, category, msg);
-}
-
-template<typename T>
-inline void spdlog::logger::fatal(const char* category, const T& msg)
-{
-    log(level::fatal, category, msg);
 }
 
 
