@@ -75,7 +75,7 @@ public:
         _max_files(max_files),
         _current_size(0),
         _file_helper(),
-        copy_in_progress_(false)
+        _copy_in_progress(false)
     {
         _file_helper.open(calc_filename(_base_filename, 0, _extension));
         _current_size = _file_helper.size(); //expensive. called only once
@@ -111,9 +111,9 @@ public:
         return result;
     }
 
-    int copyTo(const path_t& destination, bool silent) override
+    int copy_to(const path_t& destination, bool silent) override
     {
-        copy_in_progress_ = true;
+        _copy_in_progress = true;
 
         auto formatted_source = formatSourceForSHFileOperation(_base_filename);
         auto formatted_destination = formatDestinationForSHFileOperation(destination);
@@ -135,12 +135,12 @@ public:
         }
 
         auto result = SHFileOperation(&file_operation);
-        copy_in_progress_ = false;
+        _copy_in_progress = false;
 
         return result;
     }
 
-    filename_t getDestination() const override
+    filename_t get_destination() const override
     {
         return calc_filename(_base_filename, 0, _extension);
     }
@@ -149,7 +149,7 @@ protected:
     void _sink_it(const details::log_msg& msg) override
     {
         _current_size += msg.formatted.size();
-        if (_current_size > _max_size && !copy_in_progress_)
+        if (_current_size > _max_size && !_copy_in_progress)
         {
             _rotate();
             _current_size = msg.formatted.size();
@@ -213,7 +213,7 @@ private:
     std::size_t _current_size;
     details::file_helper _file_helper;
 
-    bool copy_in_progress_;
+    bool _copy_in_progress;
 };
 
 typedef rotating_file_sink<std::mutex> rotating_file_sink_mt;

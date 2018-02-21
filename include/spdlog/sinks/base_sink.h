@@ -37,13 +37,13 @@ public:
         _sink_it(msg);
     }
 
-    int copyTo(const path_t& /*destination*/, bool /*silent*/) override
+    int copy_to(const path_t& /*destination*/, bool /*silent*/) override
     {
         //do nothing
         return 0;
     }
 
-    filename_t getDestination() const override
+    filename_t get_destination() const override
     {
         return filename_t();
     }
