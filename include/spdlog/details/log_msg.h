@@ -36,7 +36,7 @@ struct log_msg
 
 
     const std::string *logger_name;
-    const char* category;
+    std::string category;
     level::level_enum level;
     log_clock::time_point time;
     size_t thread_id;

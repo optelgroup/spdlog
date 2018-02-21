@@ -118,7 +118,7 @@ public:
         auto x = formatSourceForSHFileOperation(_base_filename);
         auto y = formatDestinationForSHFileOperation(destination);
 
-        SHFILEOPSTRUCT file_operation;
+        SHFILEOPSTRUCTA file_operation;
         ZeroMemory(&file_operation, sizeof(SHFILEOPSTRUCT));
 
         file_operation.hwnd = nullptr;
@@ -134,7 +134,7 @@ public:
             file_operation.fFlags = FOF_FILESONLY | FOF_NOCONFIRMMKDIR;
         }
 
-        auto result = SHFileOperation(&file_operation);
+        auto result = SHFileOperationA(&file_operation);
         copy_in_progress_ = false;
 
         return result;

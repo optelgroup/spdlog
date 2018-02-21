@@ -49,7 +49,7 @@ class async_log_helper
     {
         std::string logger_name;
         level::level_enum level;
-        const char* category;
+        std::string category;
         log_clock::time_point time;
         size_t thread_id;
         std::string txt;
