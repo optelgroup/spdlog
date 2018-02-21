@@ -8,8 +8,6 @@
 
 #include "../details/log_msg.h"
 
-#include <filesystem>
-
 namespace spdlog
 {
 namespace sinks
