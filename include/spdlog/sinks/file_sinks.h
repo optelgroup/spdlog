@@ -115,16 +115,16 @@ public:
     {
         copy_in_progress_ = true;
 
-        auto x = formatSourceForSHFileOperation(_base_filename);
-        auto y = formatDestinationForSHFileOperation(destination);
+        auto formatted_source = formatSourceForSHFileOperation(_base_filename);
+        auto formatted_destination = formatDestinationForSHFileOperation(destination);
 
         SHFILEOPSTRUCTA file_operation;
         ZeroMemory(&file_operation, sizeof(SHFILEOPSTRUCT));
 
         file_operation.hwnd = nullptr;
         file_operation.wFunc = FO_COPY;
-        file_operation.pFrom = x.c_str();
-        file_operation.pTo = y.c_str();
+        file_operation.pFrom = formatted_source.c_str();
+        file_operation.pTo = formatted_destination.c_str();
         if (silent)
         {
             file_operation.fFlags = FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_NOCONFIRMMKDIR;
@@ -138,6 +138,11 @@ public:
         copy_in_progress_ = false;
 
         return result;
+    }
+
+    std::string getDestination() const override
+    {
+        return calc_filename(_base_filename, 0, _extension);
     }
 
 protected:

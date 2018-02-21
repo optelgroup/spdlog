@@ -43,6 +43,11 @@ public:
         return 0;
     }
 
+    std::string getDestination() const override
+    {
+        return std::string();
+    }
+
 protected:
     virtual void _sink_it(const details::log_msg& msg) = 0;
     Mutex _mutex;

@@ -26,6 +26,7 @@ public:
     virtual void log(const details::log_msg& msg) = 0;
     virtual void flush() = 0;
     virtual int copyTo(const std::tr2::sys::path& destination, bool silent = true) = 0;
+    virtual std::string getDestination() const = 0;
 
     bool should_log(level::level_enum msg_level) const;
     void set_level(level::level_enum log_level);
