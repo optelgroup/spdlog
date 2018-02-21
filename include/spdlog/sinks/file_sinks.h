@@ -11,12 +11,15 @@
 #include <spdlog/fmt/fmt.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <chrono>
 #include <cstdio>
 #include <ctime>
 #include <mutex>
 #include <string>
-#include <cerrno>
+#include <sstream>
+
+#include <ShellAPI.h>
 
 namespace spdlog
 {
@@ -71,7 +74,8 @@ public:
         _max_size(max_size),
         _max_files(max_files),
         _current_size(0),
-        _file_helper()
+        _file_helper(),
+        copy_in_progress_(false)
     {
         _file_helper.open(calc_filename(_base_filename, 0, _extension));
         _current_size = _file_helper.size(); //expensive. called only once
@@ -82,11 +86,65 @@ public:
         _file_helper.flush();
     }
 
+    std::string formatSourceForSHFileOperation(const std::tr2::sys::path& path)
+    {
+        std::ostringstream sstream;
+        sstream 
+            << path
+            << '*'
+            << '\0';
+
+        std::string result(sstream.str());
+        std::replace(result.begin(), result.end(), '/', '\\');
+
+        return result;
+    }
+
+    std::string formatDestinationForSHFileOperation(const std::tr2::sys::path& path)
+    {
+        std::ostringstream sstream;
+        sstream << path << '\0';
+
+        std::string result(sstream.str());
+        std::replace(result.begin(), result.end(), '/', '\\');
+
+        return result;
+    }
+
+    int copyTo(const std::tr2::sys::path& destination, bool silent) override
+    {
+        copy_in_progress_ = true;
+
+        auto x = formatSourceForSHFileOperation(_base_filename);
+        auto y = formatDestinationForSHFileOperation(destination);
+
+        SHFILEOPSTRUCT file_operation;
+        ZeroMemory(&file_operation, sizeof(SHFILEOPSTRUCT));
+
+        file_operation.hwnd = nullptr;
+        file_operation.wFunc = FO_COPY;
+        file_operation.pFrom = x.c_str();
+        file_operation.pTo = y.c_str();
+        if (silent)
+        {
+            file_operation.fFlags = FOF_SILENT | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_NOCONFIRMMKDIR;
+        }
+        else
+        {
+            file_operation.fFlags = FOF_FILESONLY | FOF_NOCONFIRMMKDIR;
+        }
+
+        auto result = SHFileOperation(&file_operation);
+        copy_in_progress_ = false;
+
+        return result;
+    }
+
 protected:
     void _sink_it(const details::log_msg& msg) override
     {
         _current_size += msg.formatted.size();
-        if (_current_size > _max_size)
+        if (_current_size > _max_size && !copy_in_progress_)
         {
             _rotate();
             _current_size = msg.formatted.size();
@@ -140,6 +198,8 @@ private:
     std::size_t _max_files;
     std::size_t _current_size;
     details::file_helper _file_helper;
+
+    bool copy_in_progress_;
 };
 
 typedef rotating_file_sink<std::mutex> rotating_file_sink_mt;

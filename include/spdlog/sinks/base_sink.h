@@ -37,6 +37,12 @@ public:
         _sink_it(msg);
     }
 
+    int copyTo(const std::tr2::sys::path& /*destination*/, bool /*silent*/) override
+    {
+        //do nothing
+        return 0;
+    }
+
 protected:
     virtual void _sink_it(const details::log_msg& msg) = 0;
     Mutex _mutex;

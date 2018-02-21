@@ -59,13 +59,13 @@ inline void spdlog::logger::set_pattern(const std::string& pattern)
 
 
 template <typename... Args>
-inline void spdlog::logger::log(level::level_enum lvl, const char* fmt, const Args&... args)
+inline void spdlog::logger::log(level::level_enum lvl, const char* category, const char* fmt, const Args&... args)
 {
     if (!should_log(lvl)) return;
 
     try
     {
-        details::log_msg log_msg(&_name, lvl);
+        details::log_msg log_msg(&_name, lvl, category);
         log_msg.raw.write(fmt, args...);
         _sink_it(log_msg);
     }
@@ -80,12 +80,12 @@ inline void spdlog::logger::log(level::level_enum lvl, const char* fmt, const Ar
 }
 
 template <typename... Args>
-inline void spdlog::logger::log(level::level_enum lvl, const char* msg)
+inline void spdlog::logger::log(level::level_enum lvl, const char* category, const char* msg)
 {
     if (!should_log(lvl)) return;
     try
     {
-        details::log_msg log_msg(&_name, lvl);
+        details::log_msg log_msg(&_name, lvl, category);
         log_msg.raw << msg;
         _sink_it(log_msg);
     }
@@ -101,12 +101,12 @@ inline void spdlog::logger::log(level::level_enum lvl, const char* msg)
 }
 
 template<typename T>
-inline void spdlog::logger::log(level::level_enum lvl, const T& msg)
+inline void spdlog::logger::log(level::level_enum lvl, const char* category, const T& msg)
 {
     if (!should_log(lvl)) return;
     try
     {
-        details::log_msg log_msg(&_name, lvl);
+        details::log_msg log_msg(&_name, lvl, category);
         log_msg.raw << msg;
         _sink_it(log_msg);
     }
@@ -122,79 +122,91 @@ inline void spdlog::logger::log(level::level_enum lvl, const T& msg)
 
 
 template <typename... Args>
-inline void spdlog::logger::trace(const char* fmt, const Args&... args)
+inline void spdlog::logger::trace(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::trace, fmt, args...);
+    log(level::trace, category, fmt, args...);
 }
 
 template <typename... Args>
-inline void spdlog::logger::debug(const char* fmt, const Args&... args)
+inline void spdlog::logger::debug(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::debug, fmt, args...);
+    log(level::debug, category, fmt, args...);
 }
 
 template <typename... Args>
-inline void spdlog::logger::info(const char* fmt, const Args&... args)
+inline void spdlog::logger::info(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::info, fmt, args...);
+    log(level::info, category, fmt, args...);
 }
 
 
 template <typename... Args>
-inline void spdlog::logger::warn(const char* fmt, const Args&... args)
+inline void spdlog::logger::warn(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::warn, fmt, args...);
+    log(level::warn, category, fmt, args...);
 }
 
 template <typename... Args>
-inline void spdlog::logger::error(const char* fmt, const Args&... args)
+inline void spdlog::logger::error(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::err, fmt, args...);
+    log(level::err, category, fmt, args...);
 }
 
 template <typename... Args>
-inline void spdlog::logger::critical(const char* fmt, const Args&... args)
+inline void spdlog::logger::critical(const char* category, const char* fmt, const Args&... args)
 {
-    log(level::critical, fmt, args...);
+    log(level::critical, category, fmt, args...);
+}
+
+template <typename... Args>
+inline void spdlog::logger::fatal(const char* category, const char* fmt, const Args&... args)
+{
+    log(level::fatal, category, fmt, args...);
 }
 
 
 template<typename T>
-inline void spdlog::logger::trace(const T& msg)
+inline void spdlog::logger::trace(const char* category, const T& msg)
 {
-    log(level::trace, msg);
+    log(level::trace, category, msg);
 }
 
 template<typename T>
-inline void spdlog::logger::debug(const T& msg)
+inline void spdlog::logger::debug(const char* category, const T& msg)
 {
-    log(level::debug, msg);
-}
-
-
-template<typename T>
-inline void spdlog::logger::info(const T& msg)
-{
-    log(level::info, msg);
+    log(level::debug, category, msg);
 }
 
 
 template<typename T>
-inline void spdlog::logger::warn(const T& msg)
+inline void spdlog::logger::info(const char* category, const T& msg)
 {
-    log(level::warn, msg);
+    log(level::info, category, msg);
+}
+
+
+template<typename T>
+inline void spdlog::logger::warn(const char* category, const T& msg)
+{
+    log(level::warn, category, msg);
 }
 
 template<typename T>
-inline void spdlog::logger::error(const T& msg)
+inline void spdlog::logger::error(const char* category, const T& msg)
 {
-    log(level::err, msg);
+    log(level::err, category, msg);
 }
 
 template<typename T>
-inline void spdlog::logger::critical(const T& msg)
+inline void spdlog::logger::critical(const char* category, const T& msg)
 {
-    log(level::critical, msg);
+    log(level::critical, category, msg);
+}
+
+template<typename T>
+inline void spdlog::logger::fatal(const char* category, const T& msg)
+{
+    log(level::fatal, category, msg);
 }
 
 

@@ -63,6 +63,15 @@ class short_level_formatter:public flag_formatter
     }
 };
 
+// short log level appender
+class category_formatter:public flag_formatter
+{
+    void format(details::log_msg& msg, const std::tm&) override
+    {
+        msg.formatted << msg.category;
+    }
+};
+
 ///////////////////////////////////////////////////////////////////////
 // Date time pattern appenders
 ///////////////////////////////////////////////////////////////////////
@@ -507,7 +516,7 @@ inline void spdlog::pattern_formatter::handle_flag(char flag)
 {
     switch (flag)
     {
-    // logger name
+        // logger name
     case 'n':
         _formatters.push_back(std::unique_ptr<details::flag_formatter>(new details::name_formatter()));
         break;
@@ -624,6 +633,10 @@ inline void spdlog::pattern_formatter::handle_flag(char flag)
 
     case ('P'):
         _formatters.push_back(std::unique_ptr<details::flag_formatter>(new details::pid_formatter()));
+        break;
+
+    case ('q') :
+        _formatters.push_back(std::make_unique<details::category_formatter>());
         break;
 
     default: //Unkown flag appears as is

@@ -37,7 +37,14 @@ public:
 protected:
     void _sink_it(const details::log_msg& msg) override
     {
-        OutputDebugStringA(msg.formatted.c_str());
+        try
+        {
+            OutputDebugStringA(msg.formatted.c_str());
+        }
+        catch (...)
+        {
+            OutputDebugStringA("!!! FAILED TO OUTPUT MSG !!!");
+        }
     }
 };
 

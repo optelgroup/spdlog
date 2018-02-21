@@ -35,24 +35,26 @@ public:
     logger& operator=(const logger&) = delete;
 
 
-    template <typename... Args> void log(level::level_enum lvl, const char* fmt, const Args&... args);
-    template <typename... Args> void log(level::level_enum lvl, const char* msg);
-    template <typename... Args> void trace(const char* fmt, const Args&... args);
-    template <typename... Args> void debug(const char* fmt, const Args&... args);
-    template <typename... Args> void info(const char* fmt, const Args&... args);
-    template <typename... Args> void warn(const char* fmt, const Args&... args);
-    template <typename... Args> void error(const char* fmt, const Args&... args);
-    template <typename... Args> void critical(const char* fmt, const Args&... args);
+    template <typename... Args> void log(level::level_enum lvl, const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void log(level::level_enum lvl, const char* category, const char* msg);
+    template <typename... Args> void trace(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void debug(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void info(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void warn(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void error(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void critical(const char* category, const char* fmt, const Args&... args);
+    template <typename... Args> void fatal(const char* category, const char* fmt, const Args&... args);
 
-    template <typename T> void log(level::level_enum lvl, const T&);
-    template <typename T> void trace(const T&);
-    template <typename T> void debug(const T&);
-    template <typename T> void info(const T&);
-    template <typename T> void warn(const T&);
-    template <typename T> void error(const T&);
-    template <typename T> void critical(const T&);
+    template <typename T> void log(level::level_enum lvl, const char* category, const T&);
+    template <typename T> void trace(const char* category, const T&);
+    template <typename T> void debug(const char* category, const T&);
+    template <typename T> void info(const char* category, const T&);
+    template <typename T> void warn(const char* category, const T&);
+    template <typename T> void error(const char* category, const T&);
+    template <typename T> void critical(const char* category, const T&);
+    template <typename T> void fatal(const char* category, const T&);
 
-    bool should_log(level::level_enum) const;
+    virtual bool should_log(level::level_enum) const;
     void set_level(level::level_enum);
     level::level_enum level() const;
     const std::string& name() const;

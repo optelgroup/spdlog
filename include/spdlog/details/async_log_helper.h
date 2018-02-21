@@ -49,6 +49,7 @@ class async_log_helper
     {
         std::string logger_name;
         level::level_enum level;
+        const char* category;
         log_clock::time_point time;
         size_t thread_id;
         std::string txt;
@@ -61,6 +62,7 @@ class async_log_helper
 async_msg(async_msg&& other) SPDLOG_NOEXCEPT:
         logger_name(std::move(other.logger_name)),
                     level(std::move(other.level)),
+                    category(std::move(other.category)),
                     time(std::move(other.time)),
                     txt(std::move(other.txt)),
                     msg_type(std::move(other.msg_type))
@@ -73,6 +75,7 @@ async_msg(async_msg&& other) SPDLOG_NOEXCEPT:
         {
             logger_name = std::move(other.logger_name);
             level = other.level;
+            category = other.category;
             time = std::move(other.time);
             thread_id = other.thread_id;
             txt = std::move(other.txt);
@@ -87,6 +90,7 @@ async_msg(async_msg&& other) SPDLOG_NOEXCEPT:
         // construct from log_msg
         async_msg(const details::log_msg& m) :
             level(m.level),
+            category(m.category),
             time(m.time),
             thread_id(m.thread_id),
             txt(m.raw.data(), m.raw.size()),
@@ -103,6 +107,7 @@ async_msg(async_msg&& other) SPDLOG_NOEXCEPT:
         {
             msg.logger_name = &logger_name;
             msg.level = level;
+            msg.category = category;
             msg.time = time;
             msg.thread_id = thread_id;
             msg.raw << txt;
