@@ -89,7 +89,7 @@ public:
     filename_t formatSourceForSHFileOperation(const path_t& path)
     {
         ostringstream_t sstream;
-        sstream 
+        sstream
             << path
             << _T('*')
             << _T('\0');
@@ -192,7 +192,16 @@ private:
             }
             if (details::file_helper::file_exists(src) && details::os::rename(src, target))
             {
-                throw spdlog_ex("rotating_file_sink: failed renaming " + filename_to_str(src) + " to " + filename_to_str(target), errno);
+                // Sometimes, when rotating files, there seems to be a delay between when the call to _file_helper.close()
+                // and the moment when permission is granted to rename the file. This sleep is a bad but necessary fix
+                // to ensure that the rename works. However, due to this, the application must ensure that the queue is long
+                // to not block any other thread trying to log.
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                if (details::os::rename(src, target))
+                {
+                    throw spdlog_ex("rotating_file_sink: failed renaming " + filename_to_str(src) + " to " + filename_to_str(target), errno);
+                }
             }
         }
         _file_helper.reopen(true);
