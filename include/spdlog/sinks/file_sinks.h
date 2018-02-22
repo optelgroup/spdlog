@@ -155,7 +155,7 @@ public:
 
     filename_t get_destination() const override
     {
-        return calc_filename(_base_filename, 0, _extension);
+        return calc_filename(_base_filename, 0);
     }
 
 protected:
